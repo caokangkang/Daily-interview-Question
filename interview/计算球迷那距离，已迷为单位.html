@@ -1,0 +1,73 @@
+<!--
+ * @Author: your name
+ * @Date: 2022-06-24 19:09:59
+ * @LastEditTime: 2022-06-24 20:02:44
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \Daily-interview-Question\interview\计算球迷那距离，已迷为单位.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计算球迷那距离，已迷为单位</title>
+</head>
+
+<body>
+  <script>
+
+
+    /**
+     * @description  地球半径
+     * @returns {Number} // 返回地图半径距离
+     */
+    function getEarthRadius() {
+      return 6372.8
+    }
+
+    /**
+     * @description  角度转成弧度
+     * @param {Number} dAngle // 坐标
+     * @returns {Number} // 返回两个坐标距离
+     */
+    function toRadian(dAngle) {
+      return dAngle * Math.PI / 180.0;
+    }
+
+
+
+    /**
+     * @description  计算球面距离，以米为单位
+     * @param {Number} lat1
+     * @param {Number} lng1
+     * @param {Number} lat2
+     * @param {Number} lng2
+     * @returns {Number} // 返回两个坐标距离
+     */
+
+    function getGeoDistanceKm(lat1, lng1, lat2, lng2) {
+      const radLat1 = toRadian(lat1);
+      const radLat2 = toRadian(lat2);
+      const radLng1 = toRadian(lng1);
+      const radLng2 = toRadian(lng2);
+
+      const deltaLat = radLat1 - radLat2;
+      const deltaLng = radLng1 - radLng2;
+
+      const a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.pow(Math.sin(deltaLng / 2), 2) * Math.cos(radLat1) * Math.cos(radLat2);
+
+      const c = 2 * Math.asin(Math.sqrt(a));
+
+      const distance = getEarthRadius() * c * 1000.0;
+
+
+      return distance / 1000;
+    }
+
+  </script>
+</body>
+
+</html>
