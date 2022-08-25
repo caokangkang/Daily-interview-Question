@@ -14,6 +14,78 @@
 
       ：异步编程的一种解决方案，解决了地狱回调问题。使用方法：new Promise（（resolve，reject）=>{ resolve();reject();}）里面有多个resolve或者reject只执行第一个。如果第一个是resolve的话可以接.then查看成功消息。如果第一个是reject的话，.catch查看错误消息。 promise 是一种异步编程的解决方案，它可以实现把异步操作按照同步操作的流程表达出来。它其实是一个构造函数，自己身上有all、reject、resolve这几个方法，原型上有then、catch等方法。resolved：成功状态返回一个 Promise 对象；reject：失败状态返回一个Promise 对象；race：多个 Promise 任务同时执行，返回最先执行结束的 Promise 任务的结果，不管这个 Promise 结果是成功还是失败；all：如果全部成功执行，则以数组的方式返回所有 Promise 任务的执行结果，如果有错误就返回reject的结果；.then链式：为 Promise 注册回调函数，函数一定要一个返回结果或者一个新的 Promise 对象，才可以让之后的then 回调接收；.catch：异常处理 用于指定发生错误时的回调函数。promise的出现是为了解决地狱回调问题。使用场景：结合 await async 将异步代码同化 接口封装
 */
+
+const STATUS_PENDING = 'pending';
+const STATUS_FULFILLED = 'fulfilled';
+const STATUS_REJECTED = 'rejected';
+
+
+class myPromise {
+  constructor(executor) {
+    // 初始化该class中的初始状态
+    this.status = STATUS_PENDING;
+
+    // 定义class中成功（res）和失败（err）时的变量值
+    this.res = "";
+    this.err = "";
+
+    // promise异步中最重要的异步，定义成功和错误函数存储的数组，存放异步时还没有执行的操作
+    this.onResCallbacks = [];
+    this.onErrCallbacks = [];
+
+    // 定义该构造函数constructor定义域中的变量resolve
+    let resolve = (res) => {
+      // 首先判断该 class 中的状态，只有状态为pending时才能转化fulfilled或者reject
+      if (this.status == STATUS_PENDING) {
+        // 修改 class 的状态为fulfilled，也就表示不会转进行其他状态的转化了
+        this.status = STATUS_FULFILLED;
+        // 将成功（resolve）状态下的值赋给class的成功返回res
+        this.res = res;
+        // 此时状态由pending转为fulfilled，执行之前在then中存放的需要执行的异步操作，promise的then中参数res接受结果
+        this.onResCallbacks.forEach((fn) => {
+          fn();
+        })
+
+      }
+    }
+
+    let reject = (err) => {
+      if (this.status = STATUS_PENDING) {
+        this.status = STATUS_REJECTED;
+
+        this.err = err;
+
+        this.onErrCallbacks.forEach((fn) => {
+          fn();
+        })
+      }
+    }
+
+
+    try {
+      executor(resolve, reject);
+    } catch (err) {
+      reject(err)
+    }
+  }
+
+  // 在 class 中定义promise的成功状态接受函数then, 按照promise逻辑，then中传入的一般都是一个函数
+  then(onRes = () => {}) {
+    //如果是异步的，此时在constructor中status的状态还没变成fulfilled，所以会跳过onRes调用，没有返回
+    if (this.status === STATUS_FULFILLED) {
+      onRes(this.res);
+    }
+
+    if (this.status === STATUS_PENDING) {
+      this.onResCallbacks.push(() => onRes(this.res));
+    }
+
+    return this;
+  }
+
+}
+
+
 function PromiseFn(callBack) {
   // 这里要注意，try catch 若是写 let self = this 会报错，let存在暂时死区，没有常规的变量提升
   console.log('callBack :>> ', callBack);
@@ -81,4 +153,3 @@ a.then((value) => {
 }, (error) => {
   console.log('reject' + error);
 })
-console.log('456');
