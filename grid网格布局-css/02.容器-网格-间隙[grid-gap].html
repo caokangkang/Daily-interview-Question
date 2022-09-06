@@ -10,9 +10,14 @@
 
     /* 
       3.3
-      grid-row-gap 属性；
-      grid-column-gap 属性；
-      grid-gap 属性；
+      grid-row-gap ：设置行与行的间距；
+      grid-column-gap 设置列于列的间距；
+      grid-gap 属性是grid-row-gap和grid-column-gap的合并简写；
+    */
+
+    /* 
+      如果grid-gap省略了第二个值，浏览器认为第二个值等于第一个值；
+      根据最新标准，上面三个属性名的grid-前缀已经删除， grid-column-grap和grid-row-gap写成column-gap和row-rap, grid-gap写成gap
     */
     * {
       padding: 0;
@@ -32,8 +37,13 @@
       /* 指定每一列的宽度 每个宽度中间用空格隔开 */
       grid-template-columns: 33.33% 33.33% 33.33%;
 
+      /* 设置容器间距  */
 
-      /*  */
+      grid-row-gap: 20px;
+      grid-column-gap: 20px;
+      
+      /* 间距简写 */
+      grid-gap: 20px 20px;
     }
 
     .item1 {
