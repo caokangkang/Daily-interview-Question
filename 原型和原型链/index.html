@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>原型和原型链</title>
 </head>
+
 <body>
-  
+  <script>
+    window.onbeforeunload = function (e) {
+      console.log('123 :>> ', 123);
+      e = e || window.event;
+      if (e) {
+        e.returnValue = '关闭提示';
+      }
+      return '关闭提示';
+    };
+  </script>
 </body>
+
 </html>
