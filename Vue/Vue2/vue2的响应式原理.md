@@ -17,3 +17,4 @@
 `push`、`pop`、`shift`、`unshift`、`splice`、`sort`、`reverse`这七个数组，在`Vue2`内部重写了所有可以监听到，除此之外可以使用`set()`方法，`Vue.set()`对于数组的处理其实就是调用了`splice`方法
 ### v-model双向绑定原理
 `v-model`本质上时语法糖，`v-model`默认会解析成名为`value`的`prop`和名为`input`的事件。这种语法糖的方式时典型的双向绑定；
+
